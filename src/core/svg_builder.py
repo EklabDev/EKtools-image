@@ -37,8 +37,10 @@ def build_svg(
             continue
 
         r, g, b = rgb_color
+        # Flip vertically to correct mirroring issue
         svg_parts.append(
-            f'  <g fill="rgb({r},{g},{b})" stroke="rgb({r},{g},{b})" stroke-width="0">'
+            f'  <g transform="translate(0, {scaled_height}) scale(1, -1)" '
+            f'fill="rgb({r},{g},{b})" stroke="rgb({r},{g},{b})" stroke-width="0">'
         )
         svg_parts.append(f'    <path d="{path_str}"/>')
         svg_parts.append("  </g>")
