@@ -41,7 +41,6 @@ htmlcov/
 
 # uv
 .uv/
-uv.lock
 
 # OS
 .DS_Store
