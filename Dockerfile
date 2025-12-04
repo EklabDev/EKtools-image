@@ -5,10 +5,12 @@ FROM python:3.13-slim-bookworm
 # potrace: for vectorization
 # libcairo2: for cairosvg
 # build-essential: for compiling some python packages if needed
+# libgl1: for opencv
 RUN apt-get update && apt-get install -y \
     potrace \
     libcairo2 \
     build-essential \
+    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
