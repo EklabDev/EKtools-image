@@ -6,15 +6,20 @@ FROM python:3.13-slim-bookworm
 # libcairo2: for cairosvg
 # build-essential: for compiling some python packages if needed
 # libgl1: for opencv
+# libglib2.0-0, libsm6, libxext6, libxrender1: additional opencv dependencies
 RUN apt-get update && apt-get install -y \
     potrace \
     libcairo2 \
     build-essential \
     libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+RUN pip install uv
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
