@@ -14,6 +14,7 @@ dependencies = [
     "scikit-learn>=1.5.0",
     "scikit-image>=0.24.0",
     "cairosvg>=2.7.0",
+    "slowapi>=0.1.9",
 ]
 
 [project.optional-dependencies]
@@ -42,4 +43,3 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-

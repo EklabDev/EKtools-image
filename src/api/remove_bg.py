@@ -1,12 +1,13 @@
 """
 POST /remove-background endpoint: Remove background from JPEG or PNG.
 """
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Request
 from fastapi.responses import Response
 import numpy as np
 import cv2
 from PIL import Image
 
+from src.core.limiter import limiter
 from src.utils.validators import validate_image_file
 from src.utils.image_io import load_image_from_bytes, numpy_to_pil, image_to_bytes
 from src.core.background import remove_background
@@ -15,7 +16,8 @@ router = APIRouter()
 
 
 @router.post("", response_class=Response)
-async def remove_background_endpoint(file: UploadFile = File(...)):
+@limiter.limit("100/minute")
+async def remove_background_endpoint(request: Request, file: UploadFile = File(...)):
     """
     Remove background from a JPEG or PNG image.
     
@@ -57,4 +59,3 @@ async def remove_background_endpoint(file: UploadFile = File(...)):
             status_code=500,
             detail=f"Error removing background: {str(e)}"
         )
-

@@ -2,13 +2,14 @@
 POST /vectorize endpoint: Convert PNG to SVG with color quantization.
 """
 
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Request
 from fastapi.responses import Response
 import math
 import re
 from typing import List, Tuple
 import numpy as np
 
+from src.core.limiter import limiter
 from src.utils.validators import validate_png_file, validate_file_size
 from src.utils.image_io import load_image_from_bytes
 from src.core.quantize import quantize_colors, get_color_masks
@@ -19,7 +20,10 @@ router = APIRouter()
 
 
 @router.post("", response_class=Response)
-async def vectorize(file: UploadFile = File(...), colors: int = Form(...)):
+@limiter.limit("100/minute")
+async def vectorize(
+    request: Request, file: UploadFile = File(...), colors: int = Form(...)
+):
     """
     Vectorize a PNG image into an SVG with configurable color quantization.
 

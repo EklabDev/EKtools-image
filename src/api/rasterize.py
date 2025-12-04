@@ -1,9 +1,10 @@
 """
 POST /rasterize endpoint: Convert SVG to PNG.
 """
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Request
 from fastapi.responses import Response
 
+from src.core.limiter import limiter
 from src.utils.validators import validate_svg_file, validate_file_size, get_file_size
 from src.core.rasterizer import svg_to_png
 
@@ -11,7 +12,8 @@ router = APIRouter()
 
 
 @router.post("", response_class=Response)
-async def rasterize(file: UploadFile = File(...)):
+@limiter.limit("100/minute")
+async def rasterize(request: Request, file: UploadFile = File(...)):
     """
     Convert an SVG file to PNG.
     
@@ -47,4 +49,3 @@ async def rasterize(file: UploadFile = File(...)):
             status_code=500,
             detail=f"Error converting SVG to PNG: {str(e)}"
         )
-
